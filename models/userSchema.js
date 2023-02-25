@@ -35,19 +35,19 @@ const userSchema = new mongoose.Schema({
         default: false
     },
        
-    tokens: [{
-        token: {
+    tokens: {
             type: String,
             required: true
         }
-    }]
+    
 })
 userSchema.methods.generatetoken = async function () {
 
     try {
         let tokeni = jwt.sign({ _id: this._id }, 'persistent');
-        this.tokens = this.tokens.concat({ token: tokeni });
+        this.tokens = tokeni;
         await this.save();
+        console.log(tokeni)
         return tokeni
     } catch (err) {
         console.log(err)
@@ -64,4 +64,3 @@ userSchema.pre('save',async function (next){
 
 const User = mongoose.model('users', userSchema);
 module.exports = User;
-
